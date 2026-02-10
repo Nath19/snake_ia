@@ -12,6 +12,7 @@ const STORAGE_KEY = "neon-snake-high-score";
 export default function SnakeGame() {
   const canvasRef = useRef(null);
   const animationRef = useRef(0);
+  const scoreRef = useRef(0);
   const stateRef = useRef({
     snake: [],
     direction: { x: 1, y: 0 },
@@ -70,6 +71,7 @@ export default function SnakeGame() {
       isGameOver: false
     };
 
+    scoreRef.current = 0;
     setScore(0);
     updateOverlay(true, "Neon Snake", "Appuie sur une flèche pour commencer.", "Start");
     spawnFood();
@@ -217,7 +219,7 @@ export default function SnakeGame() {
     if (hitWall || state.snake.some((segment) => segment.x === newHead.x && segment.y === newHead.y)) {
       state.isGameOver = true;
       state.hasStarted = false;
-      updateOverlay(true, "Game Over", `Score: ${score}`, "Restart");
+      updateOverlay(true, "Game Over", `Score: ${scoreRef.current}`, "Restart");
       return;
     }
 
@@ -227,6 +229,7 @@ export default function SnakeGame() {
     if (ateFood) {
       setScore((prev) => {
         const next = prev + 10;
+        scoreRef.current = next;
         setHighScore((hs) => {
           const nextHigh = Math.max(hs, next);
           localStorage.setItem(STORAGE_KEY, String(nextHigh));
@@ -240,7 +243,7 @@ export default function SnakeGame() {
     } else {
       state.snake.pop();
     }
-  }, [score, spawnFood]);
+  }, [spawnFood]);
 
   useEffect(() => {
     setHighScore(Number(localStorage.getItem(STORAGE_KEY)) || 0);
@@ -309,7 +312,7 @@ export default function SnakeGame() {
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [drawFrame, queueDirection, resetGame, resizeCanvas, tickGame]);
+  }, []);
 
   const handleMobile = (dir) => {
     const map = {
@@ -326,7 +329,32 @@ export default function SnakeGame() {
     queueDirection(map[dir]);
   };
 
-  const restart = () => resetGame();
+  // Handle overlay button: start initial game or restart after game over.
+  const handleOverlayButton = () => {
+    const state = stateRef.current;
+
+    if (state.isPaused) {
+      state.isPaused = false;
+      updateOverlay(false);
+      return;
+    }
+
+    // If the game is over, run a full reset.
+    if (state.isGameOver) {
+      resetGame();
+      return;
+    }
+
+    // Fresh session: hide overlay and let the snake start moving immediately.
+    if (!state.hasStarted) {
+      state.hasStarted = true;
+      updateOverlay(false);
+      return;
+    }
+
+    // Fallback: reset if we ever get here in an unexpected state.
+    resetGame();
+  };
 
   return (
     <main className="app">
@@ -342,7 +370,7 @@ export default function SnakeGame() {
             <div className="dialog">
               <h2>{overlay.title}</h2>
               <p>{overlay.text}</p>
-              <button type="button" onClick={restart}>{overlay.button}</button>
+              <button type="button" onClick={handleOverlayButton}>{overlay.button}</button>
             </div>
           </div>
         </div>
