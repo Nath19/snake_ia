@@ -359,6 +359,14 @@ export default function SnakeGame() {
   return (
     <main className="app">
       <section className="gameShell">
+        <header className="welcomeBanner" aria-label="Message de bienvenue">
+          <p className="welcomeKicker">⚡ Bienvenue dans Neon Snake</p>
+          <h1>Prêt·e pour une session arcade&nbsp;?</h1>
+          <p className="welcomeText">
+            Attrape les orbes roses, esquive les murs et grimpe au score maximal.
+          </p>
+        </header>
+
         <header className="hud">
           <div>Score <span className="value">{score}</span></div>
           <div>High Score <span className="value">{highScore}</span></div>
