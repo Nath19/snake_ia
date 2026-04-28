@@ -36,6 +36,41 @@ html, body {
   justify-items: center;
 }
 
+.welcomeBanner {
+  width: 100%;
+  border-radius: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(87, 255, 154, 0.35);
+  background:
+    linear-gradient(140deg, rgba(8, 16, 30, 0.9), rgba(10, 10, 28, 0.88)),
+    radial-gradient(circle at 10% 20%, rgba(0, 246, 255, 0.24), transparent 45%);
+  box-shadow:
+    0 0 20px rgba(0, 246, 255, 0.12),
+    0 0 24px rgba(87, 255, 154, 0.1),
+    inset 0 0 26px rgba(255, 46, 166, 0.08);
+}
+
+.welcomeKicker {
+  margin: 0 0 6px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--neon-cyan);
+}
+
+.welcomeBanner h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.2rem, 2.8vw, 1.65rem);
+  text-shadow: 0 0 18px rgba(255, 46, 166, 0.4);
+}
+
+.welcomeText {
+  margin: 8px 0 0;
+  color: #c8d6e4;
+  font-size: 0.96rem;
+}
+
 .hud {
   width: 100%;
   display: flex;
